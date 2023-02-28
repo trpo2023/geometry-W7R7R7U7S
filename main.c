@@ -40,32 +40,32 @@ void all_BUGS(int BUGS, int num, char* ch)
         break;
     case BUG_STAPLES:
         if (*ch == ')') {
-            printf("An eror %d was found in the input line %s')'%s\n",
+            printf("An error %d was found in the input line %s')'%s\n",
                    num,
                    YELLOW,
                    END);
             break;
         } else {
-            printf("An eror %d was found in the input line %s'('%s\n",
+            printf("An error %d was found in the input line %s'('%s\n",
                    num,
                    YELLOW,
                    END);
             break;
         }
     case BUG_NUMBER:
-        printf("An eror %d was found in the input line %s'double'%s\n",
+        printf("An error %d was found in the input line %s'double'%s\n",
                num,
                YELLOW,
                END);
         break;
     case BUG_UNIDENTIFIED_VARIABLES:
-        printf("An eror %d was found in the input line %s'variable'%s\n",
+        printf("An error %d was found in the input line %s'variable'%s\n",
                num,
                YELLOW,
                END);
         break;
     case BUG_EXPECT_COMMA:
-        printf("An eror %d was found in the input line %s','%s\n",
+        printf("An error %d was found in the input line %s','%s\n",
                num,
                YELLOW,
                END);
