@@ -1,22 +1,22 @@
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 #define YELLOW "\e[5;33m"
 #define END "\e[0m"
 #define MAX 100
 
-struct point{
+struct point {
     double x;
     double y;
 };
 
-struct circle{
+struct circle {
     struct point center;
     double radius;
 };
 
-enum BUGS{
+enum BUGS {
     BUG_NAME,
     BUG_STAPLES,
     BUG_NUMBER,
@@ -24,63 +24,82 @@ enum BUGS{
     BUG_EXPECT_COMMA,
 };
 
-void all_BUGS(int BUGS, int num, char *ch){
-    for (int i = 0; i < num; i++){
+void all_BUGS(int BUGS, int num, char* ch)
+{
+    for (int i = 0; i < num; i++) {
         putchar(' ');
     }
     printf("^\n");
 
-    switch (BUGS){
-        case BUG_NAME:
-            printf("An error %d was found in the input line %s'circle'%s\n", num, YELLOW, END);
+    switch (BUGS) {
+    case BUG_NAME:
+        printf("An error %d was found in the input line %s'circle'%s\n",
+               num,
+               YELLOW,
+               END);
+        break;
+    case BUG_STAPLES:
+        if (*ch == ')') {
+            printf("An eror %d was found in the input line %s')'%s\n",
+                   num,
+                   YELLOW,
+                   END);
             break;
-        case BUG_STAPLES:
-            if (*ch == ')'){
-                printf("An eror %d was found in the input line %s')'%s\n", num, YELLOW, END);
-                break;
-            } else {
-                printf("An eror %d was found in the input line %s'('%s\n", num, YELLOW, END);
-                break;
-            }
-        case BUG_NUMBER:
-            printf("An eror %d was found in the input line %s'double'%s\n", num, YELLOW, END);
+        } else {
+            printf("An eror %d was found in the input line %s'('%s\n",
+                   num,
+                   YELLOW,
+                   END);
             break;
-        case BUG_UNIDENTIFIED_VARIABLES:
-            printf("An eror %d was found in the input line %s'variable'%s\n", num, YELLOW, END);
-            break;
-        case BUG_EXPECT_COMMA:
-         printf("An eror %d was found in the input line %s','%s\n", num, YELLOW, END);
-         break;         
+        }
+    case BUG_NUMBER:
+        printf("An eror %d was found in the input line %s'double'%s\n",
+               num,
+               YELLOW,
+               END);
+        break;
+    case BUG_UNIDENTIFIED_VARIABLES:
+        printf("An eror %d was found in the input line %s'variable'%s\n",
+               num,
+               YELLOW,
+               END);
+        break;
+    case BUG_EXPECT_COMMA:
+        printf("An eror %d was found in the input line %s','%s\n",
+               num,
+               YELLOW,
+               END);
+        break;
     }
 }
 
-void to_lower(char *str, int ch){
-    for (int i = 0; i < ch; i++){
+void to_lower(char* str, int ch)
+{
+    for (int i = 0; i < ch; i++) {
         str[i] = tolower(str[i]);
     }
 }
 
-
-double x_data(char *arr, int *num) {
+double x_data(char* arr, int* num)
+{
     char free_space[20];
     int i = 0;
 
-    while (!isdigit(arr[*num]) && arr[*num] != '-')  {
+    while (!isdigit(arr[*num]) && arr[*num] != '-') {
         if (arr[*num] == '(' || arr[*num] == ' ') {
             *num += 1;
         } else {
-            if(arr[*num] == ')') {
+            if (arr[*num] == ')') {
                 all_BUGS(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
             } else {
                 all_BUGS(BUG_NUMBER, *num, NULL);
                 exit(1);
             }
-            
         }
     }
 
-    while(isdigit(arr[*num]) || arr[*num] == '-'|| arr[*num] == '.') {
+    while (isdigit(arr[*num]) || arr[*num] == '-' || arr[*num] == '.') {
         free_space[i] = arr[*num];
         i++;
         *num += 1;
@@ -93,11 +112,12 @@ double x_data(char *arr, int *num) {
     return strtod(free_space, &dumpster);
 }
 
-double y_data(char *arr, int* num) {
+double y_data(char* arr, int* num)
+{
     char free_space[20];
     int i = 0;
 
-    while (!isdigit(arr[*num]) && arr[*num] != '-')  {
+    while (!isdigit(arr[*num]) && arr[*num] != '-') {
         if (arr[*num] == ' ') {
             *num += 1;
         } else {
@@ -106,7 +126,7 @@ double y_data(char *arr, int* num) {
         }
     }
 
-    while (isdigit(arr[*num]) || arr[*num] == '-'|| arr[*num] == '.') {
+    while (isdigit(arr[*num]) || arr[*num] == '-' || arr[*num] == '.') {
         free_space[i] = arr[*num];
         i++;
         *num += 1;
@@ -124,11 +144,12 @@ double y_data(char *arr, int* num) {
     return strtod(free_space, &dumpster);
 }
 
-double radius_data(char *arr, int* num) {
+double radius_data(char* arr, int* num)
+{
     char free_space[20];
     int i = 0;
-    
-    while (!isdigit(arr[*num]))  {
+
+    while (!isdigit(arr[*num])) {
         if (arr[*num] == ' ' || arr[*num] == ',') {
             *num += 1;
         } else {
@@ -136,8 +157,8 @@ double radius_data(char *arr, int* num) {
             exit(1);
         }
     }
-    
-    while (isdigit(arr[*num]) || arr[*num] == '.')  {
+
+    while (isdigit(arr[*num]) || arr[*num] == '.') {
         free_space[i] = arr[*num];
         i++;
         *num += 1;
@@ -147,7 +168,7 @@ double radius_data(char *arr, int* num) {
         if (arr[*num] == ' ') {
             *num += 1;
         } else {
-            if(arr[*num] == '(') {
+            if (arr[*num] == '(') {
                 all_BUGS(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
             } else {
@@ -160,7 +181,8 @@ double radius_data(char *arr, int* num) {
     return strtod(free_space, &dumpster);
 }
 
-void empty(char *arr, int* num) {
+void empty(char* arr, int* num)
+{
     *num += 1;
     while (arr[*num] != '\n' && arr[*num] != EOF) {
         if (arr[*num] == ' ') {
@@ -172,7 +194,8 @@ void empty(char *arr, int* num) {
     }
 }
 
-struct point find_center(char* arr, int* num) {
+struct point find_center(char* arr, int* num)
+{
     struct point Center;
 
     Center.x = x_data(arr, num);
@@ -181,7 +204,8 @@ struct point find_center(char* arr, int* num) {
     return Center;
 }
 
-struct circle find_out_circle(struct point* Center, char* arr, int* num) {
+struct circle find_out_circle(struct point* Center, char* arr, int* num)
+{
     struct circle CIRCLE;
 
     CIRCLE.center.x = Center->x;
@@ -191,27 +215,29 @@ struct circle find_out_circle(struct point* Center, char* arr, int* num) {
     return CIRCLE;
 }
 
-void output_circle_message(struct circle* CIRCLE) {
+void output_circle_message(struct circle* CIRCLE)
+{
     printf("\ncircle(%.2f %.2f, %.2f)\n",
-        CIRCLE->center.x,
-        CIRCLE->center.y,
-        CIRCLE->radius);
+           CIRCLE->center.x,
+           CIRCLE->center.y,
+           CIRCLE->radius);
     printf("perimeter: %.4f\n", (2 * 3.1415926535 * CIRCLE->radius));
-    printf("area: %.4f\n", ((CIRCLE->radius*CIRCLE->radius) * 3.1415926535));
+    printf("area: %.4f\n", ((CIRCLE->radius * CIRCLE->radius) * 3.1415926535));
 }
 
-int main() {
+int main()
+{
     char enter[MAX], shape[MAX];
     int num = 0;
 
-    printf("Enter the name and coordinates of the shape (or press Enter for exit):\n");
+    printf("Enter the name and coordinates of the shape (or press Enter for "
+           "exit):\n");
     fgets(enter, MAX, stdin);
-        
+
     for (int i = 0; i < strlen(enter); i++) {
         if (enter[i] == '(' || enter[i] == ' ') {
             to_lower(shape, num);
             if (strcmp(shape, "circle") == 0) {
-
                 struct point Center = find_center(enter, &num);
                 struct circle CIRCLE = find_out_circle(&Center, enter, &num);
                 empty(enter, &num);
