@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define YELLOW "\e[5;33m"
+#define RED_FLASH "\e[5;31m"
 #define END "\e[0m"
 #define MAX 100
 
@@ -22,6 +22,8 @@ enum BUGS {
     BUG_NUMBER,
     BUG_UNIDENTIFIED_VARIABLES,
     BUG_EXPECT_COMMA,
+    BUG_STAPLES_2,
+    BUG_EXTRA_POINT,
 };
 
 void all_BUGS(int BUGS, int num, char* ch)
@@ -35,39 +37,51 @@ void all_BUGS(int BUGS, int num, char* ch)
     case BUG_NAME:
         printf("An error %d was found in the input line %s'circle'%s\n",
                num,
-               YELLOW,
+               RED_FLASH,
                END);
         break;
     case BUG_STAPLES:
         if (*ch == ')') {
             printf("An error %d was found in the input line %s')'%s\n",
                    num,
-                   YELLOW,
+                   RED_FLASH,
                    END);
             break;
         } else {
             printf("An error %d was found in the input line %s'('%s\n",
                    num,
-                   YELLOW,
+                   RED_FLASH,
                    END);
             break;
         }
+    case BUG_STAPLES_2:
+    	printf("An error %d was found in the input line %s')'%s\n",
+                   num,
+                   RED_FLASH,
+                   END);
+        break;
     case BUG_NUMBER:
         printf("An error %d was found in the input line %s'double'%s\n",
                num,
-               YELLOW,
+               RED_FLASH,
                END);
         break;
     case BUG_UNIDENTIFIED_VARIABLES:
         printf("An error %d was found in the input line %s'variable'%s\n",
                num,
-               YELLOW,
+               RED_FLASH,
                END);
         break;
     case BUG_EXPECT_COMMA:
         printf("An error %d was found in the input line %s','%s\n",
                num,
-               YELLOW,
+               RED_FLASH,
+               END);
+        break;
+    case BUG_EXTRA_POINT:
+    	printf("An error %d was found in the input line %s'.'%s\n",
+               num,
+               RED_FLASH,
                END);
         break;
     }
@@ -86,12 +100,16 @@ double x_data(char* arr, int* num)
     int i = 0;
 
     while (!isdigit(arr[*num]) && arr[*num] != '-') {
-        if (arr[*num] == '(' || arr[*num] == ' ') {
+        if (arr[*num] == '(') {
             *num += 1;
         } else {
             if (arr[*num] == ')') {
                 all_BUGS(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
+            }
+            if (arr[*num] == ' '){
+            	all_BUGS(BUG_STAPLES, *num, &arr[*num]);
+                exit(1);            
             } else {
                 all_BUGS(BUG_NUMBER, *num, NULL);
                 exit(1);
@@ -104,6 +122,7 @@ double x_data(char* arr, int* num)
         i++;
         *num += 1;
     }
+    
     if (arr[*num] != ' ') {
         all_BUGS(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
         exit(1);
@@ -148,6 +167,7 @@ double radius_data(char* arr, int* num)
 {
     char free_space[20];
     int i = 0;
+    int extra_point_count = 0;
 
     while (!isdigit(arr[*num])) {
         if (arr[*num] == ' ' || arr[*num] == ',') {
@@ -162,6 +182,13 @@ double radius_data(char* arr, int* num)
         free_space[i] = arr[*num];
         i++;
         *num += 1;
+        if (arr[*num] == '.'){
+            extra_point_count += 1;
+        }
+        if (extra_point_count >= 2){
+            all_BUGS(BUG_EXTRA_POINT, *num, &arr[*num]);
+            exit(1);
+        }
     }
 
     while (arr[*num] != ')') {
@@ -172,7 +199,7 @@ double radius_data(char* arr, int* num)
                 all_BUGS(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
             } else {
-                all_BUGS(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
+                all_BUGS(BUG_STAPLES_2, *num, &arr[*num]);
                 exit(1);
             }
         }
