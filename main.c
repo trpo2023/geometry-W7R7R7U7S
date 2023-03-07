@@ -2,21 +2,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
 #define RED_FLASH "\e[5;31m"
 #define END "\e[0m"
 #define MAX 100
 
-struct point {
+struct Point {
     double x;
     double y;
 };
 
-struct circle {
-    struct point center;
+struct Circle {
+    struct Point center;
     double radius;
 };
 
-enum BUGS {
+enum Bugs {
     BUG_NAME,
     BUG_STAPLES,
     BUG_NUMBER,
@@ -26,16 +28,16 @@ enum BUGS {
     BUG_EXTRA_POINT,
 };
 
-void all_BUGS(int BUGS, int num, char* ch)
+void output_bugs(int errors, int num, char* ch)
 {
     for (int i = 0; i < num; i++) {
         putchar(' ');
     }
     printf("^\n");
 
-    switch (BUGS) {
+    switch (errors) {
     case BUG_NAME:
-        printf("An error %d was found in the input line %s'circle'%s\n",
+        printf("An error %d was found in the input line %s'Circle'%s\n",
                num,
                RED_FLASH,
                END);
@@ -104,14 +106,14 @@ double x_data(char* arr, int* num)
             *num += 1;
         } else {
             if (arr[*num] == ')') {
-                all_BUGS(BUG_STAPLES, *num, &arr[*num]);
+                output_bugs(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
             }
             if (arr[*num] == ' '){
-            	all_BUGS(BUG_STAPLES, *num, &arr[*num]);
+            	output_bugs(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);            
             } else {
-                all_BUGS(BUG_NUMBER, *num, NULL);
+                output_bugs(BUG_NUMBER, *num, NULL);
                 exit(1);
             }
         }
@@ -124,7 +126,7 @@ double x_data(char* arr, int* num)
     }
     
     if (arr[*num] != ' ') {
-        all_BUGS(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
+        output_bugs(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
         exit(1);
     }
     char* dumpster;
@@ -140,7 +142,7 @@ double y_data(char* arr, int* num)
         if (arr[*num] == ' ') {
             *num += 1;
         } else {
-            all_BUGS(BUG_NUMBER, *num, NULL);
+            output_bugs(BUG_NUMBER, *num, NULL);
             exit(1);
         }
     }
@@ -155,7 +157,7 @@ double y_data(char* arr, int* num)
         if (arr[*num] == ' ') {
             *num += 1;
         } else {
-            all_BUGS(BUG_EXPECT_COMMA, *num, NULL);
+            output_bugs(BUG_EXPECT_COMMA, *num, NULL);
             exit(1);
         }
     }
@@ -173,7 +175,7 @@ double radius_data(char* arr, int* num)
         if (arr[*num] == ' ' || arr[*num] == ',') {
             *num += 1;
         } else {
-            all_BUGS(BUG_NUMBER, *num, NULL);
+            output_bugs(BUG_NUMBER, *num, NULL);
             exit(1);
         }
     }
@@ -186,7 +188,7 @@ double radius_data(char* arr, int* num)
             extra_point_count += 1;
         }
         if (extra_point_count >= 2){
-            all_BUGS(BUG_EXTRA_POINT, *num, &arr[*num]);
+            output_bugs(BUG_EXTRA_POINT, *num, &arr[*num]);
             exit(1);
         }
     }
@@ -196,10 +198,10 @@ double radius_data(char* arr, int* num)
             *num += 1;
         } else {
             if (arr[*num] == '(') {
-                all_BUGS(BUG_STAPLES, *num, &arr[*num]);
+                output_bugs(BUG_STAPLES, *num, &arr[*num]);
                 exit(1);
             } else {
-                all_BUGS(BUG_STAPLES_2, *num, &arr[*num]);
+                output_bugs(BUG_STAPLES_2, *num, &arr[*num]);
                 exit(1);
             }
         }
@@ -215,15 +217,15 @@ void empty(char* arr, int* num)
         if (arr[*num] == ' ') {
             *num += 1;
         } else {
-            all_BUGS(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
+            output_bugs(BUG_UNIDENTIFIED_VARIABLES, *num, NULL);
             exit(1);
         }
     }
 }
 
-struct point find_center(char* arr, int* num)
+struct Point find_center(char* arr, int* num)
 {
-    struct point Center;
+    struct Point Center;
 
     Center.x = x_data(arr, num);
     Center.y = y_data(arr, num);
@@ -231,25 +233,25 @@ struct point find_center(char* arr, int* num)
     return Center;
 }
 
-struct circle find_out_circle(struct point* Center, char* arr, int* num)
+struct Circle find_out_circle(struct Point* Center, char* arr, int* num)
 {
-    struct circle CIRCLE;
+    struct Circle circle;
 
-    CIRCLE.center.x = Center->x;
-    CIRCLE.center.y = Center->y;
-    CIRCLE.radius = radius_data(arr, num);
+    circle.center.x = Center->x;
+    circle.center.y = Center->y;
+    circle.radius = radius_data(arr, num);
 
-    return CIRCLE;
+    return circle;
 }
 
-void output_circle_message(struct circle* CIRCLE)
+void output_circle_message(struct Circle* circle)
 {
     printf("\ncircle(%.2f %.2f, %.2f)\n",
-           CIRCLE->center.x,
-           CIRCLE->center.y,
-           CIRCLE->radius);
-    printf("perimeter: %.4f\n", (2 * 3.1415926535 * CIRCLE->radius));
-    printf("area: %.4f\n", ((CIRCLE->radius * CIRCLE->radius) * 3.1415926535));
+           circle->center.x,
+           circle->center.y,
+           circle->radius);
+    printf("perimeter: %.4f\n", (2 * M_PI * circle->radius));
+    printf("area: %.4f\n", ((circle->radius * circle->radius) * M_PI));
 }
 
 int main()
@@ -265,17 +267,17 @@ int main()
         if (enter[i] == '(' || enter[i] == ' ') {
             to_lower(shape, num);
             if (strcmp(shape, "circle") == 0) {
-                struct point Center = find_center(enter, &num);
-                struct circle CIRCLE = find_out_circle(&Center, enter, &num);
+                struct Point center = find_center(enter, &num);
+                struct Circle circle = find_out_circle(&center, enter, &num);
                 empty(enter, &num);
-                output_circle_message(&CIRCLE);
+                output_circle_message(&circle);
                 break;
             } else {
-                all_BUGS(BUG_NAME, 0, NULL);
+                output_bugs(BUG_NAME, 0, NULL);
                 exit(1);
             }
         } else if (enter[i] == ')') {
-            all_BUGS(BUG_STAPLES, num, &enter[i]);
+            output_bugs(BUG_STAPLES, num, &enter[i]);
             exit(1);
         }
 
