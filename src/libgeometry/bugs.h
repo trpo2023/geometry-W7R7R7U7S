@@ -1,8 +1,3 @@
-#include <stdio.h>
-
-#define RED_FLASH "\e[5;31m"
-#define END "\e[0m"
-
 enum Bugs {
     BUG_NAME,
     BUG_STAPLES,
