@@ -1,5 +1,7 @@
-#include <libgeometry/bugs.h>
+#include <stdio.h>
 #include <stdlib.h>
+
+#include <libgeometry/bugs.h>
 
 #define RED_FLASH "\e[5;31m"
 #define END "\e[0m"
