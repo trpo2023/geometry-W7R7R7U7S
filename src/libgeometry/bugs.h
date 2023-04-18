@@ -10,8 +10,7 @@ enum Bugs {
     BUG_UNIDENTIFIED_VARIABLES,
     BUG_EXPECT_COMMA,
     BUG_STAPLES_2,
-    BUG_EXTRA_POINT,
+    BUG_EXTRA_POINT
 };
 
 void output_bugs(int errors, int num, char* ch);
-
