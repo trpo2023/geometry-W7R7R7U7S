@@ -41,4 +41,3 @@ double x_data(char* arr, int* num)
     char* dumpster;
     return strtod(free_space, &dumpster);
 }
-
