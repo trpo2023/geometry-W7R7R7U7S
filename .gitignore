@@ -1,0 +1,4 @@
+*.o
+*.[oad]
+app
+.vscode
