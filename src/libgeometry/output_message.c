@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include <libgeometry/bugs.h>
 #include <libgeometry/data_x.h>
